@@ -1,3 +1,4 @@
+library(gridlayout)
 library(shiny)
 
 appLaunch <- function() {
