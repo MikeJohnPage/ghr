@@ -7,7 +7,7 @@ query_gh <- function(endpoint) {
   response$total_count
 }
 
-repos_monthly <- function(start_date = "2010-01-01", end_date = "today", ...) {
+monthly_dates <- function(start_date = "2010-01-01", end_date = "today") {
   if (is.na(lubridate::as_date(start_date, format = "%Y-%m-%d"))) {
     stop("Please supply a `start_date` in the format %Y-%m-%d")
   } else {
@@ -26,15 +26,25 @@ repos_monthly <- function(start_date = "2010-01-01", end_date = "today", ...) {
     stop("`start_date` must be before `end_date`")
   }
 
-  start_dates <- seq(
-    from = start_date,
-    to = lubridate::floor_date(end_date, "month") - 1,
-    by = "month"
+  dates <- tibble::tibble(
+    start_dates = seq(
+      from = start_date,
+      to = lubridate::floor_date(end_date, "month") - 1,
+      by = "month"
+    ),
+    end_dates = lubridate::ceiling_date(start_dates, "month") - 1
   )
+}
 
-  end_dates <- lubridate::ceiling_date(start_dates, "month") - 1
+repos <- function(start_date = "2010-01-01", end_date = "today", ...) {
+  dates <- monthly_dates(start_date, end_date)
 
-  params <- paste0("language:R created:", start_dates, "..", end_dates)
+  params <- paste0(
+    "language:R created:",
+    dates$start_dates,
+    "..",
+    dates$end_dates
+  )
 
   endpoint <- paste0(
     "/search/repositories?q=",
@@ -44,7 +54,7 @@ repos_monthly <- function(start_date = "2010-01-01", end_date = "today", ...) {
   count <- purrr::map_int(endpoint, query_gh, .progress = TRUE)
 
   tibble::tibble(
-    date = end_dates,
+    date = dates$end_dates,
     repo_count = count
   )
 }
