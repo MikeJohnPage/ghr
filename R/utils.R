@@ -36,11 +36,15 @@ monthly_dates <- function(start_date = "2010-01-01", end_date = "today") {
   )
 }
 
-repos <- function(start_date = "2010-01-01", end_date = "today", ...) {
+repos <- function(
+    start_date = "2010-01-01",
+    end_date = "today",
+    language = "R") {
+  
   dates <- monthly_dates(start_date, end_date)
 
   params <- paste0(
-    "language:R created:",
+    "language:", language, " created:",
     dates$start_dates,
     "..",
     dates$end_dates
@@ -48,7 +52,7 @@ repos <- function(start_date = "2010-01-01", end_date = "today", ...) {
 
   endpoint <- paste0(
     "/search/repositories?q=",
-    params # encoded by gh::gh()
+    params # encoded by gh https://github.com/r-lib/gh/blob/main/R/gh_request.R#L136
   )
 
   count <- purrr::map_int(endpoint, query_gh, .progress = TRUE)
