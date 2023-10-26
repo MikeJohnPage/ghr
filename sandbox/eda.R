@@ -15,7 +15,8 @@ data_science_repos |>
     x = NULL,
     y = "Number of repos"
   ) +
-  scale_x_date(date_breaks = "2 year", date_labels = "%Y")
+  scale_x_date(date_breaks = "2 year", date_labels = "%Y") +
+  scale_y_continuous(labels = scales::comma)
 
 # - Combined -
 data_science_repos |>
@@ -28,6 +29,7 @@ data_science_repos |>
   theme_ipsum() +
    labs(
     title = "Python continues to show growth while R and Julia lag behind",
+    subtitle = "Note: repositories are on a log (10) scale",
     x = NULL,
     y = "Number of repos"
   ) +
