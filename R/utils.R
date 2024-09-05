@@ -17,7 +17,7 @@ monthly_dates <- function(start_date = "2010-01-01", end_date = "today") {
   if (end_date == "today") {
     end_date <- lubridate::today()
   } else if (is.na(lubridate::as_date(end_date, format = "%Y-%m-%d"))) {
-    stop("Please supply a `end_date` in the format %Y-%m-%d")
+    stop("Please supply an `end_date` in the format %Y-%m-%d")
   } else {
     end_date <- lubridate::ymd(end_date)
   }
@@ -40,7 +40,6 @@ repos <- function(
     start_date = "2010-01-01",
     end_date = "today",
     language = "R") {
-  
   dates <- monthly_dates(start_date, end_date)
 
   params <- paste0(
